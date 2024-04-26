@@ -1,11 +1,12 @@
 package CreateNetwork;
+
 public class NeuralNetwork {
-    Layer[] layers;
+    public Layer[] layers;
 
     public NeuralNetwork(int[] layerSizes) {
         layers = new Layer[layerSizes.length - 1];
         for (int i = 0; i < layerSizes.length - 1; i++) {
-            layers[i] = new Layer(layerSizes[i], layerSizes[i] + 1);
+            layers[i] = new Layer(layerSizes[i], layerSizes[i + 1]);
         }
     }
 

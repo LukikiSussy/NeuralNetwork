@@ -8,10 +8,12 @@ public class DrawGraph extends JComponent {
     public void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
 
+        double[] inputs;
+
         for (int x = 50; x < getWidth(); x++) {
             for (int y = 0; y < getHeight() - 50; y++) {
 
-                double[] inputs = {x,y};
+                inputs = new double[] { x * 10000, y * 10000 };
                 if (NeuralNetworkMain.network.classify(inputs) == 0) {
                     g2.setColor(Color.red);
                 } else {

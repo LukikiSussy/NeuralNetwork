@@ -29,16 +29,35 @@ public class Layer {
         }
     }
 
+    public void setRandom() {
+        double[][] weightsIn = new double[numNodesIn][numNodesOut];
+        double[] biasesIn = new double[numNodesOut];
+
+        for (int i = 0; i < numNodesIn; i++) {
+            for (int j = 0; j < numNodesOut; j++) {
+                weightsIn[i][j] = (Math.random() - 0.5) * 4;
+            }
+        }
+
+        for (int i = 0; i < numNodesOut; i++) {
+            biasesIn[i] = (Math.random() - 0.5);
+        }
+
+        this.setWeights(weightsIn);
+        this.setBiases(biasesIn);
+    }
+
     public double[] calculateOutputs(double[] inputs) {
 
         double[] weightedInputs = new double[numNodesOut];
 
         for (int nodeOut = 0; nodeOut < numNodesOut; nodeOut++) {
-            double weightedInput = biases[nodeOut];
+            double weightedInput = 0;
             for (int nodeIn = 0; nodeIn < numNodesIn; nodeIn++) {
                 weightedInput += inputs[nodeIn] * weights[nodeIn][nodeOut];
             }
-            weightedInputs[nodeOut] = weightedInput;
+            double activatedInput = Math.tanh(weightedInput) + biases[nodeOut];
+            weightedInputs[nodeOut] = activatedInput;
         }
 
         return weightedInputs;
