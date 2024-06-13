@@ -95,13 +95,15 @@ public class Network {
     public void updateWeights(double eta) {
         for (int layer = 1; layer < NETWORK_SIZE; layer++) {
             for (int neuron = 0; neuron < NETWORK_LAYER_SIZES[layer]; neuron++) {
-                for (int prevNeuron = 0; prevNeuron < NETWORK_LAYER_SIZES[layer - 1]; prevNeuron++) {
-                    //weight[layer][neuron][prevNeuron]
-                    double delta = -eta * output[layer-1][prevNeuron] * error_signal[layer][neuron];
-                    weights[layer][neuron][prevNeuron] += delta;
-                }
+
                 double delta = -eta * error_signal[layer][neuron];
                 bias[layer][neuron] += delta;
+
+                for (int prevNeuron = 0; prevNeuron < NETWORK_LAYER_SIZES[layer - 1]; prevNeuron++) {
+                    //weight[layer][neuron][prevNeuron]
+                    //adding delta for weights
+                    weights[layer][neuron][prevNeuron] += delta * output[layer-1][prevNeuron];;
+                }
             }
         }
     }
