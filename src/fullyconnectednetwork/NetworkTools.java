@@ -96,4 +96,51 @@ public class NetworkTools {
 
         return index;
     }
+
+    /*public static double[] flatten2d(double[][] in) {
+        int index = 0;
+        for (int i = 0; i < in.length; i++) {
+            for (int j = 0; j < in[i].length; j++) {
+                index++;
+            }
+        }
+
+        double[] flattened = new double[index];
+        index = 0;
+
+        for (int i = 0; i < in.length; i++) {
+            for (int j = 0; j < in[i].length; j++) {
+                flattened[index] = in[i][j];
+                index++;
+            }
+        }
+
+        return flattened;
+    }
+
+    public static double[] flatten3d(double[][][] in) {
+        int index = 0;
+        for (int i = 0; i < in.length; i++) {
+            for (int j = 0; j < in[i].length; j++) {
+                for (int k = 0; k < in[i][j].length; k++) {
+                    index++;
+                }    
+            }
+        }
+
+        double[] flattened = new double[index];
+        index = 0;
+
+        for (int i = 0; i < in.length; i++) {
+            for (int j = 0; j < in[i].length; j++) {
+                for (int k = 0; k < in[i][j].length; k++) {
+                System.out.println(index);
+                flattened[index] = in[i][j][k];
+                index++;
+                }
+            }
+        }
+
+        return flattened;
+    }*/
 }

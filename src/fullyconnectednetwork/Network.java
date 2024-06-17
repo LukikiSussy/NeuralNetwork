@@ -1,8 +1,10 @@
 package fullyconnectednetwork;
 
+import java.io.Serializable;
 import java.util.Arrays;
+import trainset.TrainSet;
 
-public class Network {
+public class Network implements Serializable {
 
     private double[][] output;
     private double[][][] weights;
@@ -64,6 +66,16 @@ public class Network {
         return output[NETWORK_SIZE - 1];
     }
 
+    public void train(TrainSet set, int loops, int batch_size) {
+        for (int i = 0; i < loops; i++) {
+            TrainSet batch = set.extractBatch(batch_size);
+
+            for (int b = 0; b < batch_size; b++) {
+                this.train(batch.getInput(b), batch.getOutput(b), 0.3);
+            }
+        }
+    }
+
     // eta = learing rate
     public void train(double[] input, double[] target, double eta) {
         if (input.length != INPUT_SIZE || target.length != OUTPUT_SIZE)
@@ -100,9 +112,10 @@ public class Network {
                 bias[layer][neuron] += delta;
 
                 for (int prevNeuron = 0; prevNeuron < NETWORK_LAYER_SIZES[layer - 1]; prevNeuron++) {
-                    //weight[layer][neuron][prevNeuron]
-                    //adding delta for weights
-                    weights[layer][neuron][prevNeuron] += delta * output[layer-1][prevNeuron];;
+                    // weight[layer][neuron][prevNeuron]
+                    // adding delta for weights
+                    weights[layer][neuron][prevNeuron] += delta * output[layer - 1][prevNeuron];
+                    ;
                 }
             }
         }
@@ -113,16 +126,18 @@ public class Network {
     }
 
     public static void main(String[] args) {
-        Network net = new Network(4, 1, 3, 4);
+        Network net = new Network(4, 3, 3, 2);
 
-        double[] input = new double[]{0.1, 0.5, 0.2, 0.9};
-        double[] target = new double[]{0, 1, 0, 0};
+        TrainSet set = new TrainSet(4, 2);
+        set.addData(new double[] { 0.1, 0.2, 0.3, 0.4 }, new double[] { 0.9, 0.1 });
+        set.addData(new double[] { 0.9, 0.8, 0.7, 0.6 }, new double[] { 0.1, 0.9 });
+        set.addData(new double[] { 0.3, 0.8, 0.1, 0.4 }, new double[] { 0.3, 0.7 });
+        set.addData(new double[] { 0.9, 0.8, 0.1, 0.2 }, new double[] { 0.7, 0.3 });
 
-        for (int i = 0; i < 1000; i++) {
-            net.train(input, target, 0.3);
+        net.train(set, 10000, 4);
+
+        for (int i = 0; i < 4; i++) {
+            System.out.println(Arrays.toString(net.calculate(set.getInput(i))));
         }
-        double[] output = net.calculate(input);
-        System.out.println(Arrays.toString(output));
     }
-
 }
