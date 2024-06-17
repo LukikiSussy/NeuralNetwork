@@ -48,6 +48,7 @@ public class Network implements Serializable {
     public double[] calculate(double... input) {
         if (input.length != this.INPUT_SIZE)
             return null;
+
         this.output[0] = input;
 
         for (int layer = 1; layer < NETWORK_SIZE; layer++) {
@@ -126,7 +127,7 @@ public class Network implements Serializable {
     }
 
     public static void main(String[] args) {
-        //Network net = new Network(4, 3, 3, 2);
+        // Network net = new Network(4, 3, 3, 2);
         Network net = SerializeNetwork.deserialize("test");
 
         TrainSet set = new TrainSet(4, 2);
@@ -135,12 +136,13 @@ public class Network implements Serializable {
         set.addData(new double[] { 0.3, 0.8, 0.1, 0.4 }, new double[] { 0.3, 0.7 });
         set.addData(new double[] { 0.9, 0.8, 0.1, 0.2 }, new double[] { 0.7, 0.3 });
 
-        //net.train(set, 10000, 4);
+        // net.train(set, 10000, 4);
 
         for (int i = 0; i < 4; i++) {
+            System.out.println(Arrays.toString(set.getInput(i)));
             System.out.println(Arrays.toString(net.calculate(set.getInput(i))));
         }
 
-        //SerializeNetwork.serialize(net, "test");
+        // SerializeNetwork.serialize(net, "test");
     }
 }

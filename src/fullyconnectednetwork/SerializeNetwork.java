@@ -4,69 +4,63 @@ import java.io.*;
 
 public class SerializeNetwork {
     public static void serialize(Network net, String filename) {
-        if(net == null || filename.length() <= 0) return;
-        
-        //adding file extension to file name
-        if(filename.length() >= 4) {
+        if (net == null || filename.length() <= 0)
+            return;
+
+        // adding file extension to file name
+        if (filename.length() >= 4) {
             String extension = filename.substring(filename.length() - 4);
-            if(!extension.equals(".ser")) filename = filename + ".ser";
+            if (!extension.equals(".ser"))
+                filename = filename + ".ser";
         }
 
-        try
-        {   
-            //Saving of object in a file
+        try {
+            // Saving of object in a file
             FileOutputStream file = new FileOutputStream(filename);
             ObjectOutputStream out = new ObjectOutputStream(file);
-             
+
             // Method for serialization of object
             out.writeObject(net);
-             
+
             out.close();
             file.close();
-             
+
             System.out.println("Object has been serialized");
- 
+
         }
-         
-        catch(IOException ex)
-        {
+
+        catch (IOException ex) {
             System.out.println("IOException is caught");
-        }        
+        }
     }
 
     public static Network deserialize(String filename) {
-        if(filename.length() <= 4) return null;
-        
-        //checking for correct file extension
-        if(filename.length() >= 4) {
-            String extension = filename.substring(filename.length() - 4);
-            if(!extension.equals(".ser")) filename = filename + ".ser";
-        }
+        // checking for correct file extension
+        String extension = filename.substring(filename.length() - 4);
+        if (!extension.equals(".ser"))
+            filename = filename + ".ser";
 
         Network net = null;
 
-        try
-        {   
+        try {
             // Reading the object from a file
             FileInputStream file = new FileInputStream(filename);
             ObjectInputStream in = new ObjectInputStream(file);
-             
+
             // Method for deserialization of object
-            net = (Network)in.readObject();
-             
+            net = (Network) in.readObject();
+
             in.close();
             file.close();
-             
-            System.out.println("Object has been deserialized");            
+
+            System.out.println("Object has been deserialized");
         }
-         
-        catch(IOException ex)
-        {
+
+        catch (IOException ex) {
             System.out.println("IOException is caught");
         }
-         
-        catch(ClassNotFoundException ex)
-        {
+
+        catch (ClassNotFoundException ex) {
             System.out.println("ClassNotFoundException is caught");
         }
 
