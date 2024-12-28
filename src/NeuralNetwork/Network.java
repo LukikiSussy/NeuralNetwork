@@ -12,6 +12,8 @@ public class Network implements Serializable {
 	public final int INPUT_SIZE;
 	public Layer[] layers;
 
+	private TrainingTracker training_tracker;
+
 	public Network(String name, int... NETWORK_LAYER_SIZES) {
 		this.NAME = name;
 
@@ -52,23 +54,55 @@ public class Network implements Serializable {
 	// if set too high, the weights and biases will have trouble settling
 	// if set to high, the network will take longer to learn
 	public void Train(TrainSet set, int loops, int batch_size, double eta) {
+		this.training_tracker = new TrainingTracker(batch_size, eta, 0, loops);
+
 		for (int i = 0; i < loops; i++) {
 			TrainSet batch = set.extractBatch(batch_size);
 
-			for (int j = 0; j < batch_size; j++) {
-				this.UpdateAllGradients(batch.getInput(j), batch.getOutput(j));
-			}
+			this.Train(batch, eta);
+			this.UpdateLoadingBar(loops, i);
+			this.training_tracker.training_loops_finished = i;
 
-			this.ApplyAllGradientsAndClear(eta);
-
-			int LOG_AFTER = loops / 100;
-			if (i % LOG_AFTER == 0) {
-				int p_done = (i * 100) / loops + 1;
-				System.out.print("\r" + "-".repeat(p_done) + p_done + "%");
+			if(i % 1000000 == 0 && i != 0) {
+				SerializeNetwork.serialize(this, this.NAME);
 			}
 		}
 
 		System.out.println();
+		SerializeNetwork.serialize(this, this.NAME);
+	}
+
+	// training from parameters preconfigured before serialization
+	public void ContinueTraining(TrainSet set) {
+		for (int i = this.training_tracker.training_loops_finished; i < this.training_tracker.training_loops; i++) {
+			TrainSet batch = set.extractBatch(this.training_tracker.batch_size);
+
+			this.Train(batch, this.training_tracker.eta);
+			this.UpdateLoadingBar(this.training_tracker.training_loops, i);
+			this.training_tracker.training_loops_finished = i;
+
+			if(i % 1000000 == 0 && i != 0) {
+				SerializeNetwork.serialize(this, this.NAME);
+			}
+		}
+
+		System.out.println();
+		SerializeNetwork.serialize(this, this.NAME);
+	}
+
+	private void Train(TrainSet batch, double eta) {
+		for (int j = 0; j < batch.size(); j++) {
+			this.UpdateAllGradients(batch.getInput(j), batch.getOutput(j));
+		}
+		this.ApplyAllGradientsAndClear(eta);
+	}
+
+	private void UpdateLoadingBar(int total_loops, int loops) {
+		int LOG_AFTER = total_loops / 100;
+		if (loops % LOG_AFTER == 0) {
+			int p_done = (loops * 100) / total_loops + 1;
+			System.out.print("\r" + "-".repeat(p_done) + p_done + "%");
+		}
 	}
 
 	private void ApplyAllGradientsAndClear(double eta) {
