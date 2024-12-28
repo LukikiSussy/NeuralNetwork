@@ -8,6 +8,7 @@ import javax.swing.JLabel;
 
 import NeuralNetwork.Network;
 
+// very cool visualization script that is completely useless and very janky and won't work for bigger networks
 public class CreateGraph extends JFrame {
 
     public JLabel[][] Labels;
