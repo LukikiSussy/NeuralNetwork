@@ -1,6 +1,8 @@
 package NeuralNetwork;
 
-public class Layer {
+import java.io.Serializable;
+
+public class Layer implements Serializable {
 
 	public final int LAYER_SIZE;
 	public final int PREV_LAYER_SIZE;

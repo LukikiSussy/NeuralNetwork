@@ -1,8 +1,10 @@
 package NeuralNetwork;
 
+import java.io.Serializable;
+
 import NetworkTools.NetworkTools;
 
-public class Network {
+public class Network implements Serializable {
 	public final String NAME;
 
 	public final int[] NETWORK_LAYER_SIZES;
@@ -58,7 +60,15 @@ public class Network {
 			}
 
 			this.ApplyAllGradientsAndClear(eta);
+
+			int LOG_AFTER = loops / 100;
+			if (i % LOG_AFTER == 0) {
+				int p_done = (i * 100) / loops + 1;
+				System.out.print("\r" + "-".repeat(p_done) + p_done + "%");
+			}
 		}
+
+		System.out.println();
 	}
 
 	private void ApplyAllGradientsAndClear(double eta) {

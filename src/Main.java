@@ -1,9 +1,8 @@
 import java.util.Arrays;
 
-import NetworkTools.NetworkTools;
 import NeuralNetwork.Network;
+import NeuralNetwork.SerializeNetwork;
 import NeuralNetwork.TrainSet;
-import Visualization.CreateGraph;
 
 public class Main {
 	public static void main(String[] args) throws Exception {
@@ -25,10 +24,10 @@ public class Main {
 		set.addData(new double[] {0.3, 0.8, 0.2, 0.4}, new double[] {0.3, 0.7});
 		set.addData(new double[] {0.9, 0.8, 0.1, 0.5}, new double[] {0.7, 0.3});
 
-		NeuralNetwork.Train(set, (int) Math.pow(10, NeuralNetwork.NETWORK_SIZE), 4, 0.3);
+		NeuralNetwork.Train(set, 100000, 4, 0.3);
 
 		System.out.println(Arrays.toString(NeuralNetwork.Calculate(set.getInput(7))));
 
-		new CreateGraph(NeuralNetwork, 1200, 1000);
+		// new CreateGraph(NeuralNetwork, 1200, 1000);
 	}
 }
