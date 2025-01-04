@@ -1,8 +1,7 @@
 package NeuralNetwork;
 
-import java.io.Serializable;
-
 import NetworkTools.NetworkTools;
+import java.io.Serializable;
 
 public class Network implements Serializable {
 	public final String NAME;
@@ -51,15 +50,16 @@ public class Network implements Serializable {
 	// (values are randomly selected)
 
 	// eta = learning rate
+	// gamma = momentum factor
 	// if set too high, the weights and biases will have trouble settling
 	// if set to high, the network will take longer to learn
-	public void Train(TrainSet set, int loops, int batch_size, double eta) {
-		this.training_tracker = new TrainingTracker(batch_size, eta, 0, loops);
+	public void Train(TrainSet set, int loops, int batch_size, double eta, double gamma) {
+		this.training_tracker = new TrainingTracker(batch_size, eta, gamma, 0, loops);
 
 		for (int i = 0; i < loops; i++) {
 			TrainSet batch = set.extractBatch(batch_size);
 
-			this.Train(batch, eta);
+			this.Train(batch, eta, gamma);
 			this.UpdateLoadingBar(loops, i);
 			this.training_tracker.training_loops_finished = i;
 
@@ -77,7 +77,7 @@ public class Network implements Serializable {
 		for (int i = this.training_tracker.training_loops_finished; i < this.training_tracker.training_loops; i++) {
 			TrainSet batch = set.extractBatch(this.training_tracker.batch_size);
 
-			this.Train(batch, this.training_tracker.eta);
+			this.Train(batch, this.training_tracker.eta, this.training_tracker.gamma);
 			this.UpdateLoadingBar(this.training_tracker.training_loops, i);
 			this.training_tracker.training_loops_finished = i;
 
@@ -90,11 +90,11 @@ public class Network implements Serializable {
 		SerializeNetwork.serialize(this, this.NAME);
 	}
 
-	private void Train(TrainSet batch, double eta) {
+	private void Train(TrainSet batch, double eta, double gamma) {
 		for (int j = 0; j < batch.size(); j++) {
 			this.UpdateAllGradients(batch.getInput(j), batch.getOutput(j));
 		}
-		this.ApplyAllGradientsAndClear(eta);
+		this.ApplyAllGradientsAndClear(eta, gamma);
 	}
 
 	private void UpdateLoadingBar(int total_loops, int loops) {
@@ -105,9 +105,9 @@ public class Network implements Serializable {
 		}
 	}
 
-	private void ApplyAllGradientsAndClear(double eta) {
+	private void ApplyAllGradientsAndClear(double eta, double gamma) {
 		for (int i = 0; i < layers.length; i++) {
-			layers[i].ApplyGradientsAndClear(eta);
+			layers[i].ApplyGradientsAndClear(eta, gamma);
 		}
 	}
 

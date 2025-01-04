@@ -13,6 +13,8 @@ public class Layer implements Serializable {
 	public double[][] cost_gradient_weights;
 	public double[] cost_gradient_biases;
 
+	private double[][] prev_weight_increment;
+
 	public double[] weighted_inputs;
 	public double[] activations;
 	public double[] inputs;
@@ -31,6 +33,9 @@ public class Layer implements Serializable {
 		// the gradients represent the derivatives of the cost functions based on the weights and biases
 		this.cost_gradient_weights = new double[LAYER_SIZE][PREV_LAYER_SIZE];
 		this.cost_gradient_biases = new double[LAYER_SIZE];
+
+		// used for momentum
+		this.prev_weight_increment = new double[LAYER_SIZE][PREV_LAYER_SIZE];
 
 		this.weighted_inputs = new double[LAYER_SIZE]; // pre-activation function values
 		this.activations = new double[LAYER_SIZE]; // outputs after going through the activation function
@@ -57,15 +62,18 @@ public class Layer implements Serializable {
 		return this.activations;
 	}
 
-	public void ApplyGradientsAndClear(double eta) {
+	public void ApplyGradientsAndClear(double eta, double gamma) {
 
 		for (int i = 0; i < LAYER_SIZE; i++) {
 			biases[i] -= cost_gradient_biases[i] * eta;
 
 			for (int j = 0; j < PREV_LAYER_SIZE; j++) {
-				weights[i][j] -= cost_gradient_weights[i][j] * eta;
+				weights[i][j] -= cost_gradient_weights[i][j] * eta + this.prev_weight_increment[i][j] * gamma;
 			}
 		}
+
+		// setting value for momentum calculation in next iteration
+		this.prev_weight_increment = this.cost_gradient_weights;
 
 		// clearing the cost gradient arrays
 		this.cost_gradient_weights = new double[LAYER_SIZE][PREV_LAYER_SIZE];

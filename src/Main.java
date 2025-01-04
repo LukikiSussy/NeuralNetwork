@@ -1,8 +1,6 @@
-import java.util.Arrays;
-
 import NeuralNetwork.Network;
-import NeuralNetwork.SerializeNetwork;
 import NeuralNetwork.TrainSet;
+import java.util.Arrays;
 
 public class Main {
 	public static void main(String[] args) throws Exception {
@@ -18,7 +16,7 @@ public class Main {
 		set.addData(new double[] {0.3, 0.8, 0.2, 0.4}, new double[] {0.3, 0.7});
 		set.addData(new double[] {0.9, 0.8, 0.1, 0.5}, new double[] {0.7, 0.3});
 
-		NeuralNetwork.Train(set, 10000000, 4, 0.3);
+		NeuralNetwork.Train(set, 10000, 4, 0.3, 0.5);
 
 		NeuralNetwork.ContinueTraining(set);
 
