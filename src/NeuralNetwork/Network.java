@@ -3,6 +3,7 @@ package NeuralNetwork;
 import NetworkTools.NetworkTools;
 import java.io.Serializable;
 
+// https://www.youtube.com/watch?v=hfMk-kjRv4c&t=2370s
 public class Network implements Serializable {
 	public final String NAME;
 

@@ -13,11 +13,11 @@ public class CreateGraph extends JFrame {
 
     public JLabel[][] Labels;
 
-    public CreateGraph(Network NeuralNetwork, int Width, int Height) {
+    public CreateGraph(Network NeuralNetwork, int width, int height) {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         this.setResizable(false);
-        this.setSize(Width, Height);
+        this.setSize(width, height);
         this.setTitle("Neural Network Graph");
         this.setLayout(null);
 
@@ -53,12 +53,12 @@ public class CreateGraph extends JFrame {
                 int max_length = Arrays.stream(NeuralNetwork.NETWORK_LAYER_SIZES).max().getAsInt();
                 int max_lenght_or_width = Math.max(max_length, NeuralNetwork.NETWORK_SIZE);
 
-                int neuron_size = Math.max((int) ((Width - 0.2 * Width) / max_lenght_or_width) - 40, 20);
+                int neuron_size = Math.max((int) ((width - 0.2 * width) / max_lenght_or_width) - 40, 20);
 
                 Label.setSize(neuron_size, neuron_size);
                 Label.setLocation(
-                        Width / (NeuralNetwork.NETWORK_SIZE + 1) * (i + 1) - neuron_size / 2,
-                        Height / (NeuralNetwork.NETWORK_LAYER_SIZES[i] + 1) * (j + 1) - neuron_size / 2);
+                        width / (NeuralNetwork.NETWORK_SIZE + 1) * (i + 1) - neuron_size / 2,
+                        height / (NeuralNetwork.NETWORK_LAYER_SIZES[i] + 1) * (j + 1) - neuron_size / 2);
 
                 this.add(Label);
             }

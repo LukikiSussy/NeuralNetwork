@@ -1,26 +1,30 @@
 import NeuralNetwork.Network;
+import NeuralNetwork.SerializeNetwork;
 import NeuralNetwork.TrainSet;
+import Visualization.DataVisualizer;
+import Visualization.Frame;
+
+import java.io.IOException;
 import java.util.Arrays;
 
+import DatasetLoaders.MnistLoader;
+import DatasetLoaders.MnistMatrix;
+
 public class Main {
-	public static void main(String[] args) throws Exception {
+
+	private static DataVisualizer v = new DataVisualizer(250);
+
+	public static void main(String[] args) throws IOException {
 		Network NeuralNetwork = new Network("Test Network", 4, 8, 4, 2);
 
-		TrainSet set = new TrainSet(4, 2);
-		set.addData(new double[] {0.1, 0.2, 0.3, 0.4}, new double[] {0.9, 0.1});
-		set.addData(new double[] {0.9, 0.8, 0.7, 0.6}, new double[] {0.1, 0.9});
-		set.addData(new double[] {0.3, 0.8, 0.1, 0.4}, new double[] {0.3, 0.7});
-		set.addData(new double[] {0.9, 0.8, 0.1, 0.2}, new double[] {0.7, 0.3});
-		set.addData(new double[] {0.2, 0.2, 0.3, 0.4}, new double[] {0.9, 0.1});
-		set.addData(new double[] {0.9, 0.2, 0.7, 0.6}, new double[] {0.1, 0.9});
-		set.addData(new double[] {0.3, 0.8, 0.2, 0.4}, new double[] {0.3, 0.7});
-		set.addData(new double[] {0.9, 0.8, 0.1, 0.5}, new double[] {0.7, 0.3});
+		MnistMatrix[] mnist_matrix = new MnistLoader().ReadData("MnistDataset/train-images.idx3-ubyte",
+				"MnistDataset/train-labels.idx1-ubyte");
 
-		NeuralNetwork.Train(set, 10000, 4, 0.3, 0.5);
+		//mnist_matrix = new MnistLoader().ReadData("MnistDataset/t10k-images.idx3-ubyte",
+		//		"MnistDataset/t10k-labels.idx1-ubyte");
 
-		NeuralNetwork.ContinueTraining(set);
-
-		System.out.println(Arrays.toString(NeuralNetwork.Calculate(set.getInput(7))));
+		Frame frame = new Frame(500);
+		frame.DrawNumber(mnist_matrix[10]);
 
 		// new CreateGraph(NeuralNetwork, 1200, 1000);
 	}
