@@ -2,11 +2,6 @@ package DatasetLoaders;
 
 import java.io.*;
 
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-
 // credit to https://github.com/turkdogan/mnist-data-reader/blob/master/Main.java
 public class MnistLoader {
 

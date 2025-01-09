@@ -3,7 +3,6 @@ package Visualization;
 import DatasetLoaders.MnistMatrix;
 
 import javax.swing.JPanel;
-import javax.swing.JComponent;
 import java.awt.*;
 
 public class DataVisualizer extends JPanel {

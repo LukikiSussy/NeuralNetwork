@@ -1,11 +1,8 @@
 import NeuralNetwork.Network;
-import NeuralNetwork.SerializeNetwork;
-import NeuralNetwork.TrainSet;
 import Visualization.DataVisualizer;
 import Visualization.Frame;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 import DatasetLoaders.MnistLoader;
 import DatasetLoaders.MnistMatrix;
