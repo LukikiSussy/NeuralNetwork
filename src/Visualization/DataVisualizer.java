@@ -27,8 +27,6 @@ public class DataVisualizer extends JPanel {
 		this.label = matrix.label;
 		this.pixel_size_x = size / this.data.length;
 		this.pixel_size_y = size / this.data[0].length;
-
-		System.out.println("Data Set");
 	}
 
 	public void paintComponent(Graphics g) {
@@ -37,7 +35,6 @@ public class DataVisualizer extends JPanel {
 			return;
 
 		Graphics2D g2 = (Graphics2D) g;
-		System.out.println(this.label);
 
 		for (int y = 0; y < this.data.length; y++) {
 			for (int x = 0; x < this.data[0].length; x++) {

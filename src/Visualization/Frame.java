@@ -22,7 +22,6 @@ public class Frame extends JFrame {
 	}
 
 	public void DrawNumber(MnistMatrix matrix) {
-		System.out.println(this.visualizer != null);
 		if (this.visualizer != null) {
 			this.window.setTitle(String.valueOf(matrix.label));
 			this.visualizer.SetData(matrix);
