@@ -27,16 +27,27 @@ public class MnistMatrix {
 		for (int i = 0; i < this.data.length; i++) {
 			for (int j = 0; j < this.data[i].length; j++) {
 
-				if (i - t_y >= this.data.length || i - t_y < 0 || j - t_x >= this.data[i].length || j - t_x < 0) {
+				int new_y = i + t_y;
+				int new_x = j - t_x;
+
+				if (new_y >= this.data.length || new_y < 0 || new_x >= this.data[i].length || new_x < 0) {
 					translated_data[i][j] = 0;
 				}
 				else {
-					translated_data[i][j] = this.data[i - t_y][j - t_x];
+					translated_data[i][j] = this.data[new_y][new_x];
 				}
 			}
 		}
 
 		this.data = translated_data;
+	}
+
+	public void JumbleData() {
+		int random_x = (int) Math.random() * 10 - 5;
+		int random_y = (int) Math.random() * 10 - 5;
+
+		this.Translate(random_x, random_y);
+		this.AddNoise(20);
 	}
 
 	public double[] GetInputs() {
