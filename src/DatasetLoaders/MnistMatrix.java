@@ -72,4 +72,11 @@ public class MnistMatrix {
 
 		return outputs;
 	}
+
+	public MnistMatrix Clone() {
+		MnistMatrix new_matrix = new MnistMatrix(this.data.length, this.data[0].length, label);
+		new_matrix.data = this.data;
+
+		return new_matrix;
+	}
 }

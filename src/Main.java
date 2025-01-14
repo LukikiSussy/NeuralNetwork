@@ -18,8 +18,11 @@ public class Main {
 
 		MnistMatrix[] mnist_matrix = new MnistLoader().ReadData("MnistDataset/train-images.idx3-ubyte",
 				"MnistDataset/train-labels.idx1-ubyte");
-		MnistMatrix[] input_matrix = new MnistLoader().ReadData("MnistDataset/train-images.idx3-ubyte",
-				"MnistDataset/train-labels.idx1-ubyte");
+
+		MnistMatrix[] input_matrix = new MnistMatrix[mnist_matrix.length];
+		for (int i = 0; i < mnist_matrix.length; i++) {
+			input_matrix[i] = mnist_matrix[i].Clone();
+		}
 
 		// mnist_matrix = new MnistLoader().ReadData("MnistDataset/t10k-images.idx3-ubyte",
 		// "MnistDataset/t10k-labels.idx1-ubyte");
