@@ -8,34 +8,24 @@ import java.util.Arrays;
 
 import DatasetLoaders.MnistLoader;
 import DatasetLoaders.MnistMatrix;
+import DatasetLoaders.SetMaker;
 
 public class Main {
 
-	private static DataVisualizer v = new DataVisualizer(250);
-
 	public static void main(String[] args) throws IOException {
-		Network NeuralNetwork = new Network("Test Network", 4, 8, 4, 2);
 
-		MnistMatrix[] mnist_matrix = new MnistLoader().ReadData("MnistDataset/train-images.idx3-ubyte",
-				"MnistDataset/train-labels.idx1-ubyte");
+		Network NeuralNetwork = new Network("Test Network", 784, 1000, 250, 10);
 
-		MnistMatrix[] input_matrix = new MnistMatrix[mnist_matrix.length];
-		for (int i = 0; i < mnist_matrix.length; i++) {
-			input_matrix[i] = mnist_matrix[i].Clone();
-		}
+		MnistMatrix[][] Mnist_matrices = SetMaker.PrepareMatrices(10000);
+		TrainSet[] sets = SetMaker.MakeSets(Mnist_matrices, 784, 10);
 
-		// mnist_matrix = new MnistLoader().ReadData("MnistDataset/t10k-images.idx3-ubyte",
-		// "MnistDataset/t10k-labels.idx1-ubyte");
+		MnistMatrix[] full_matrix = Mnist_matrices[0];
+		TrainSet train_set = sets[0];
+		TrainSet test_set = sets[1];
 
-		Frame frame = new Frame(500, mnist_matrix);
+		Frame frame = new Frame(500, full_matrix);
 
-		TrainSet set = new TrainSet(784, 10);
-
-		for (int i = 0; i < mnist_matrix.length; i++) {
-			input_matrix[i].JumbleData();
-			set.addData(input_matrix[i].GetInputs(), input_matrix[i].GetOutputs());
-
-		}
+		NeuralNetwork.Train(train_set, test_set, 10000, 20, 0.5, 0.5);
 
 		// new CreateGraph(NeuralNetwork, 1200, 1000);
 	}

@@ -2,6 +2,7 @@ package NeuralNetwork;
 
 import NetworkTools.NetworkTools;
 import java.io.Serializable;
+import java.util.Arrays;
 
 // https://www.youtube.com/watch?v=hfMk-kjRv4c&t=2370s
 public class Network implements Serializable {
@@ -11,6 +12,10 @@ public class Network implements Serializable {
 	public final int NETWORK_SIZE;
 	public final int INPUT_SIZE;
 	public Layer[] layers;
+
+	public double train_acc;
+	private boolean was_correct;
+	private int[] past_output_correctness;
 
 	private TrainingTracker training_tracker;
 
@@ -22,6 +27,8 @@ public class Network implements Serializable {
 		this.layers = new Layer[NETWORK_SIZE - 1]; // 1. layer is on index 0, 0th layer(input) is not in the list
 
 		this.INPUT_SIZE = NETWORK_LAYER_SIZES[0];
+
+		this.past_output_correctness = new int[100];
 
 		// creates the layers and set the weights and biases to random numbers from 0 to 1
 		for (int i = 0; i < NETWORK_SIZE - 1; i++) {
@@ -47,6 +54,24 @@ public class Network implements Serializable {
 		return inputs;
 	}
 
+	public double[] EvaluateAccuracy(TrainSet set, TrainSet test_set) {
+		int train_sum = 0;
+		for (int i = 0; i < past_output_correctness.length; i++) {
+			train_sum += past_output_correctness[i];
+		}
+		double train_correctness_percentage = train_sum * 100 / past_output_correctness.length;
+
+		int test_sum = 0;
+		TrainSet batch = test_set.extractBatch(past_output_correctness.length);
+		for (int i = 0; i < batch.size(); i++) {
+			double[] network_outputs = this.Calculate(batch.getInput(i));
+			test_sum += IsCorrectlyClassified(network_outputs, batch.getOutput(i)) ? 1 : 0;
+		}
+		double test_correctness_percentage = test_sum * 100 / batch.size();
+
+		return new double[] {train_correctness_percentage, test_correctness_percentage};
+	}
+
 	// batch size = how many values from the set will be used for each loop of the training cycle
 	// (values are randomly selected)
 
@@ -54,17 +79,23 @@ public class Network implements Serializable {
 	// gamma = momentum factor
 	// if set too high, the weights and biases will have trouble settling
 	// if set to high, the network will take longer to learn
-	public void Train(TrainSet set, int loops, int batch_size, double eta, double gamma) {
+	public void Train(TrainSet set, TrainSet test_set, int loops, int batch_size, double eta, double gamma) {
+		loops = Math.max(loops, past_output_correctness.length);
+		batch_size = Math.min(batch_size, set.size());
+
 		this.training_tracker = new TrainingTracker(batch_size, eta, gamma, 0, loops);
 
 		for (int i = 0; i < loops; i++) {
 			TrainSet batch = set.extractBatch(batch_size);
 
 			this.Train(batch, eta, gamma);
-			this.UpdateLoadingBar(loops, i);
+
+			this.past_output_correctness[i % past_output_correctness.length] = was_correct ? 1 : 0;
+
+			this.UpdateLoadingBar(loops, i, set, test_set);
 			this.training_tracker.training_loops_finished = i;
 
-			if(i % 1000000 == 0 && i != 0) {
+			if (i % 100 == 0 && i != 0) {
 				SerializeNetwork.serialize(this, this.NAME);
 			}
 		}
@@ -74,15 +105,15 @@ public class Network implements Serializable {
 	}
 
 	// training from parameters preconfigured before serialization
-	public void ContinueTraining(TrainSet set) {
+	public void ContinueTraining(TrainSet set, TrainSet test_set) {
 		for (int i = this.training_tracker.training_loops_finished; i < this.training_tracker.training_loops; i++) {
 			TrainSet batch = set.extractBatch(this.training_tracker.batch_size);
 
 			this.Train(batch, this.training_tracker.eta, this.training_tracker.gamma);
-			this.UpdateLoadingBar(this.training_tracker.training_loops, i);
+			this.UpdateLoadingBar(this.training_tracker.training_loops, i, set, test_set);
 			this.training_tracker.training_loops_finished = i;
 
-			if(i % 1000000 == 0 && i != 0) {
+			if (i % 1000000 == 0 && i != 0) {
 				SerializeNetwork.serialize(this, this.NAME);
 			}
 		}
@@ -98,11 +129,11 @@ public class Network implements Serializable {
 		this.ApplyAllGradientsAndClear(eta, gamma);
 	}
 
-	private void UpdateLoadingBar(int total_loops, int loops) {
+	private void UpdateLoadingBar(int total_loops, int loops, TrainSet train_set, TrainSet test_set) {
 		int LOG_AFTER = total_loops / 100;
 		if (loops % LOG_AFTER == 0) {
 			int p_done = (loops * 100) / total_loops + 1;
-			System.out.print("\r" + "-".repeat(p_done) + p_done + "%");
+			System.out.print("\r" + "-".repeat(p_done) + p_done + "% " + Arrays.toString(this.EvaluateAccuracy(train_set, test_set)));
 		}
 	}
 
@@ -130,6 +161,16 @@ public class Network implements Serializable {
 			Layer hidden_layer = this.layers[hidden_layer_index];
 			node_values = hidden_layer.CalculateHiddenNodeValues(this.layers[hidden_layer_index + 1], node_values);
 			hidden_layer.UpdateGradients(node_values);
+
+			this.was_correct = IsCorrectlyClassified(last_layer.activations, expected_output);
 		}
+	}
+
+	private boolean IsCorrectlyClassified(double[] output, double[] expected_output) {
+		// check if the network was correct
+		int net_classification = NetworkTools.highestValInArray(output);
+		int expected_classification = NetworkTools.highestValInArray(expected_output);
+
+		return net_classification == expected_classification;
 	}
 }

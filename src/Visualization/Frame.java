@@ -32,16 +32,16 @@ public class Frame extends JFrame {
 		button_panel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 10));
 
 		// Create modern buttons
-		JButton next_button = createModernButton("Reset");
-		JButton randomButton = createModernButton("Random");
+		JButton prev_button = createModernButton("Prev");
+		JButton next_button = createModernButton("Next");
 
 		// Add hover effects
+		addHoverEffect(prev_button, Color.DARK_GRAY, Color.GRAY);
 		addHoverEffect(next_button, Color.DARK_GRAY, Color.GRAY);
-		addHoverEffect(randomButton, Color.DARK_GRAY, Color.GRAY);
 
 		// Add buttons to the panel
+		button_panel.add(prev_button);
 		button_panel.add(next_button);
-		button_panel.add(randomButton);
 
 		next_button.addActionListener(new ActionListener() {
 			@Override
@@ -49,6 +49,17 @@ public class Frame extends JFrame {
 				display_index++;
 				if (display_index >= data.length) {
 					display_index = 0;
+				}
+				DrawNumber(display_index);
+			}
+		});
+
+		prev_button.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				display_index--;
+				if (display_index < 0) {
+					display_index = data.length - 1;
 				}
 				DrawNumber(display_index);
 			}

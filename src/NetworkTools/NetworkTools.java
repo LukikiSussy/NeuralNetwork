@@ -51,4 +51,17 @@ public class NetworkTools {
 
 		return result;
 	}
+
+	public static int highestValInArray(double[] array) {
+		int index = 0;
+		double highest = -999999;
+		for (int i = 0; i < array.length; i++) {
+			if (array[i] > highest) {
+				highest = array[i];
+				index = i;
+			}
+		}
+
+		return index;
+	}
 }

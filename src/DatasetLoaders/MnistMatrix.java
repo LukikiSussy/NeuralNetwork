@@ -1,5 +1,7 @@
 package DatasetLoaders;
 
+import java.util.Random;
+
 public class MnistMatrix {
 	public int[][] data;
 	public int label;
@@ -43,8 +45,9 @@ public class MnistMatrix {
 	}
 
 	public void JumbleData() {
-		int random_x = (int) Math.random() * 10 - 5;
-		int random_y = (int) Math.random() * 10 - 5;
+		Random rand = new Random();
+		int random_x = rand.nextInt(7) - 5;
+		int random_y = rand.nextInt(4) - 5;
 
 		this.Translate(random_x, random_y);
 		this.AddNoise(20);
