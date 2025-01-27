@@ -3,12 +3,12 @@ package DatasetLoaders;
 import java.util.Random;
 
 public class MnistMatrix {
-	public int[][] data;
+	public double[][] data;
 	public int label;
 
 	public MnistMatrix(int n_rows, int n_cols, int label) {
 
-		this.data = new int[n_rows][n_cols];
+		this.data = new double[n_rows][n_cols];
 		this.label = label;
 	}
 
@@ -16,7 +16,7 @@ public class MnistMatrix {
 		for (int i = 0; i < noise_count; i++) {
 			int point_x = (int) Math.floor(Math.random() * this.data.length);
 			int point_y = (int) Math.floor(Math.random() * this.data[0].length);
-			int intensity = (int) Math.floor(Math.random() * 255);
+			int intensity = (int) Math.floor(Math.random());
 
 			this.data[point_y][point_x] = Math.max(this.data[point_y][point_x], intensity);
 		}
@@ -24,7 +24,7 @@ public class MnistMatrix {
 
 	public void Translate(int t_x, int t_y) {
 
-		int[][] translated_data = new int[this.data.length][this.data[0].length];
+		double[][] translated_data = new double[this.data.length][this.data[0].length];
 
 		for (int i = 0; i < this.data.length; i++) {
 			for (int j = 0; j < this.data[i].length; j++) {

@@ -36,7 +36,7 @@ public class MnistLoader {
 			MnistMatrix mnistMatrix = new MnistMatrix(n_rows, n_cols, label);
 			for (int r = 0; r < n_rows; r++) {
 				for (int c = 0; c < n_cols; c++) {
-					mnistMatrix.data[r][c] = data_input_stream.readUnsignedByte();
+					mnistMatrix.data[r][c] = data_input_stream.readUnsignedByte() / 255.0;
 				}
 			}
 			data[i] = mnistMatrix;

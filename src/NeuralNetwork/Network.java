@@ -17,6 +17,8 @@ public class Network implements Serializable {
 	private boolean was_correct;
 	private int[] past_output_correctness;
 
+	private int SERIALIZE_AFTER = 5;
+
 	private TrainingTracker training_tracker;
 
 	public Network(String name, int... NETWORK_LAYER_SIZES) {
@@ -95,7 +97,7 @@ public class Network implements Serializable {
 			this.UpdateLoadingBar(loops, i, set, test_set);
 			this.training_tracker.training_loops_finished = i;
 
-			if (i % 100 == 0 && i != 0) {
+			if (i % SERIALIZE_AFTER == 0 && i != 0) {
 				SerializeNetwork.serialize(this, this.NAME);
 			}
 		}
@@ -113,7 +115,7 @@ public class Network implements Serializable {
 			this.UpdateLoadingBar(this.training_tracker.training_loops, i, set, test_set);
 			this.training_tracker.training_loops_finished = i;
 
-			if (i % 1000000 == 0 && i != 0) {
+			if (i % SERIALIZE_AFTER == 0 && i != 0) {
 				SerializeNetwork.serialize(this, this.NAME);
 			}
 		}

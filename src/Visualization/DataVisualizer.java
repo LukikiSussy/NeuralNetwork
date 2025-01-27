@@ -8,7 +8,7 @@ import java.awt.*;
 public class DataVisualizer extends JPanel {
 
 	private int size;
-	private int[][] data;
+	private double[][] data;
 	private int label;
 
 	private int pixel_size_x;
@@ -39,7 +39,7 @@ public class DataVisualizer extends JPanel {
 		for (int y = 0; y < this.data.length; y++) {
 			for (int x = 0; x < this.data[0].length; x++) {
 
-				int brightness = this.data[y][x];
+				int brightness = (int)(this.data[y][x] * 255);
 				Color c = new Color(brightness, brightness, brightness);
 				g2.setColor(c);
 				
