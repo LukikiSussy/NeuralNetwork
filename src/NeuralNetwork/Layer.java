@@ -2,6 +2,8 @@ package NeuralNetwork;
 
 import java.io.Serializable;
 
+import NetworkTools.NetworkTools;
+
 public class Layer implements Serializable {
 
 	public final int LAYER_SIZE;
@@ -58,7 +60,7 @@ public class Layer implements Serializable {
 
 			this.activations[i] = ActivationFunction(weighted_inputs[i]);
 		}
-
+		
 		return this.activations;
 	}
 
